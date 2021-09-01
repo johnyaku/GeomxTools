@@ -1,7 +1,3 @@
-# Return result from sData method and compare to expected
-# Return result from svarLabels method and compare to expected
-# Return result from dimLabels method and compare to expected
-
 
 library(GeomxTools)
 library(testthat)
@@ -32,7 +28,7 @@ testData_agg <- aggregateCounts(testData)
 
 DCCFiles <- DCCFiles[!basename(DCCFiles) %in% unique(sData(testData)$NTC_ID)]
 
-# req 1: test that the rownames and column names in sData are correct:------
+# spec 1: test that the rownames and column names in sData are correct:------
 testthat::test_that("test that the rownames and column names in sData are correct", {
   expect_true(all(basename(DCCFiles) %in% rownames(sData(testData))))
   expect_true(all(c(names(testData@phenoData@data),
@@ -40,17 +36,13 @@ testthat::test_that("test that the rownames and column names in sData are correc
 })
 
 
-
-
-# req 2: test that the svarLabels method gives the correct results:------
+# spec 2: test that the svarLabels method gives the correct results:------
 testthat::test_that("test that the svarLabels method gives the correct results", {
   expect_true(all(svarLabels(testData) == colnames(sData(testData))))
 })
 
 
-
-
-# req 3: test that the dimLabels method gives the correct results:------
+# spec 3: test that the dimLabels method gives the correct results:------
 testthat::test_that("test that the dimLabels method gives the correct results", {
   expect_true(length(dimLabels(testData)) == 2)
   expect_true(all(paste0(sData(testData)[[dimLabels(testData)[2]]], ".dcc") == colnames(testData@assayData$exprs)))
@@ -58,15 +50,13 @@ testthat::test_that("test that the dimLabels method gives the correct results", 
 })
 
 
-
-# req 4: test that the design method gives the correct results:------
+# spec 4: test that the design method gives the correct results:------
 testthat::test_that("test that the design method gives the correct results", {
   expect_true(is.null(design(testData)))
 })
 
 
-
-# req 5: test that the featureType method gives the correct results:------
+# spec 5: test that the featureType method gives the correct results:------
 testthat::test_that("test that the featureType method gives the correct results", {
   expect_true(featureType(testData_agg) == "Target")
   expect_true(featureType(testData) == "Probe")

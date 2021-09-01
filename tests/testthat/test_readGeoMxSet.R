@@ -1,8 +1,3 @@
-# Return colnames and rownames of testData@assayData$expr comparing to expected
-# Return colnames and rownames of testData@phenoData@data comparing to expected
-# Return colnames and rownames of testData@protocolData@data comparing to expected
-# Return genes of testData@featureData@data comparing to expected
-# Return testData@experimentData comparing to expected
 
 library(GeomxTools)
 library(testthat)
@@ -15,7 +10,7 @@ PKCFiles <- unzip(zipfile = file.path(datadir,  "/pkcs.zip"))
 SampleAnnotationFile <- file.path(datadir, "annotations.xlsx")
 
 testData <-
-  suppressWarnings(readNanoStringGeoMxSet(dccFiles = DCCFiles, # QuickBase: readNanoStringGeomxSet, need to change it.
+  suppressWarnings(readNanoStringGeoMxSet(dccFiles = DCCFiles,
                                           pkcFiles = PKCFiles,
                                           phenoDataFile = SampleAnnotationFile,
                                           phenoDataSheet = "CW005",
@@ -32,7 +27,7 @@ pkcFile <- readPKCFile(PKCFiles)
 DCCFiles <- DCCFiles[!basename(DCCFiles) %in% unique(sData(testData)$NTC_ID)]
 
 
-# req 1: test that the column names and the rownames of testData@assayData$exprs match those in DCC files and PKC Files respectively:------
+# spec 1: test that the column names and the rownames of testData@assayData$exprs match those in DCC files and PKC Files respectively:------
 testthat::test_that("test that the column names and the rownames of testData@assayData$exprs match those in DCC files and PKC Files respectively", {
   expect_true(all(basename(DCCFiles) %in% colnames(testData@assayData$exprs)))
   expect_true(all(unique(pkcFile$RTS_ID) %in% rownames(testData@assayData$exprs)))
@@ -41,7 +36,7 @@ testthat::test_that("test that the column names and the rownames of testData@ass
 
 
 
-# req 2: test that the column names and the rownames of testData@phenoData$data match those in DCC files and PKC Files respectively:------ 
+# spec 2: test that the column names and the rownames of testData@phenoData$data match those in DCC files and PKC Files respectively:------ 
 testthat::test_that("test that the column names and the rownames of testData@phenoData$exprs match those in DCC files and PKC Files respectively", {
   phenoDataDccColName <- "Sample_ID"
   protocolDataColNames <- c("aoi",
@@ -53,7 +48,7 @@ testthat::test_that("test that the column names and the rownames of testData@phe
   pheno_tab <- openxlsx::read.xlsx(SampleAnnotationFile, sheet = 'CW005')
   colnames(pheno_tab) <- str_replace_all(colnames(pheno_tab),'\\.',' ')
   expect_true(all(basename(DCCFiles) %in% rownames(testData@phenoData@data)))
-  expect_true(all(colnames(pheno_tab) %in% c(names(testData@phenoData@data), # what is pheno_tab?
+  expect_true(all(colnames(pheno_tab) %in% c(names(testData@phenoData@data),
                                              phenoDataDccColName,
                                              protocolDataColNames,
                                              experimentDataColNames)))
@@ -62,7 +57,7 @@ testthat::test_that("test that the column names and the rownames of testData@phe
 
 
 
-# req 3: test that the column names and the rownames of testData@protocolData$data match those in DCC files and PKC Files respectively:------
+# spec 3: test that the column names and the rownames of testData@protocolData$data match those in DCC files and PKC Files respectively:------
 testthat::test_that("test that the column names and the rownames of testData@protocolData$exprs match those in DCC files and PKC Files respectively", {
   protocolDataColNames <- c("aoi",
                             "cell_line",
@@ -76,15 +71,15 @@ testthat::test_that("test that the column names and the rownames of testData@pro
 
 
 
-# req 4: test that the genes in testData@featureData@data match those in PKC Files:------
+# spec 4: test that the genes in testData@featureData@data match those in PKC Files:------
 testthat::test_that("test that the genes in testData@featureData$exprs match those in PKC Files", {
-  expect_true(dim(testData@featureData@data)[1] == length(unique(pkcFile$RTS_ID))) # QuickBase: length(unique(pkcFile$Gene))
+  expect_true(dim(testData@featureData@data)[1] == length(unique(pkcFile$RTS_ID)))
   expect_true(all(unique(pkcFile$RTS_ID) %in% testData@featureData@data$RTS_ID))
 })
 
 
 
-# req 5: test that the names in testData@experimentData@other are in correct format:------
+# spec 5: test that the names in testData@experimentData@other are in correct format:------
 testthat::test_that("test that the names in testData@experimentData@other are in correct format", {
   experimentDataColNames <- c("panel")
   experimentDataColNames <- c(experimentDataColNames, 
@@ -98,7 +93,7 @@ testthat::test_that("test that the names in testData@experimentData@other are in
 })
 
 
-#req 6: test that the counts in testData@assayData$exprs match those in DCC files
+# spec 6: test that the counts in testData@assayData$exprs match those in DCC files
 testthat::test_that("test that the counts of testData@assayData$exprs match those in DCC files", {
   correct <- TRUE
   i <- 1

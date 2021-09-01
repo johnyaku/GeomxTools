@@ -1,8 +1,3 @@
-# dimLabels(testData) should result in "A" "B"
-# dimLabels(testData) == labs should result in FALSE FALSE
-# design(testData) should result in x ~ y
-# design(testData) == des should result in logical(0)
-
 
 library(GeomxTools)
 library(testthat)
@@ -28,9 +23,7 @@ testData <-
                                                       experimentDataColNames = c("panel")))
 
 
-
-
-# req 1: test that dimLabels(testData) matches the value assigned:------
+# spec 1: test that dimLabels(testData) matches the value assigned:------
 testthat::test_that("test that dimLabels(testData) matches the value assigned", {
   labs <- dimLabels(testData)
   dimLabels(testData) <- c("A", "B")
@@ -39,9 +32,7 @@ testthat::test_that("test that dimLabels(testData) matches the value assigned", 
 })
 
 
-
-
-# req 2: test that design(testData) matches the value assigned:------
+# spec 2: test that design(testData) matches the value assigned:------
 testthat::test_that("test that design(testData) matches the value assigned", {
   des <- design(testData)
   expect_null(des)
@@ -50,11 +41,11 @@ testthat::test_that("test that design(testData) matches the value assigned", {
   expect_false(identical(design(testData), des))
 })
 
-# req 3: test that featureType(testData) matches the value assigned:------
+
+# spec 3: test that featureType(testData) matches the value assigned:------
 testthat::test_that("test that featureType(testData) matches the value assigned", {
   featType <- featureType(testData)
   featureType(testData) <- "Target"
   expect_true(all(featureType(testData) == "Target"))
   expect_false(identical(featureType(testData), featType))
 })
-

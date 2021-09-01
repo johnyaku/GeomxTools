@@ -20,11 +20,14 @@ subData <-
 
 subAggd <- suppressWarnings(aggregateCounts(subData))
 
+# spec #1: test that feature type changes after aggregation
 testthat::test_that("Feature type changed after aggregation", {
     expect_true(featureType(subData) == "Probe")
     expect_true(featureType(subAggd) == "Target")
 })
 
+
+# spec #2: test that the aggregated object has target dimension and annotations
 testthat::test_that("Aggregated object has target dimension and annotations", {
     expect_true(all(fData(subData)[["TargetName"]] %in% featureNames(subAggd)))
     expect_true(length(unique(fData(subData)[["TargetName"]])) == 
@@ -38,6 +41,8 @@ testthat::test_that("Aggregated object has target dimension and annotations", {
     expect_true(all(svarLabels(subData) %in% svarLabels(subAggd)))
 })
 
+
+# spec #3: test that target expression matrix contains aggregated counts
 testthat::test_that("Target expression matrix contains aggregated counts", {
     expect_true(all(colnames(exprs(subData)) == colnames(exprs(subAggd))))
     sameTargs <- intersect(fData(subData)[["TargetName"]],
@@ -54,6 +59,8 @@ testthat::test_that("Target expression matrix contains aggregated counts", {
     expect_true(all(unlist(subList)))
 })
 
+
+# spec #4: test that the user can pass other functions to aggregate with
 testthat::test_that("Other aggregation functions work", {
     subSum <- suppressWarnings(aggregateCounts(subData, FUN=sum))
     expect_true(all(colnames(exprs(subData)) == colnames(exprs(subSum))))

@@ -1,4 +1,3 @@
-# devtools::install_github("https://github.com/Nanostring-Biostats/GeomxTools/", ref="dev", force = TRUE, dependencies = FALSE)
 
 library(NanoStringNCTools)
 library(GeomxTools)
@@ -21,31 +20,31 @@ testData <- setSeqQCFlags(testData,
 prData <- protocolData(testData)
 TechSigQC <- as.data.frame(prData[["QCFlags"]])
 
-# req 1: test that the number of Low Reads is correct:------
+# spec 1: test that the number of Low Reads is correct:------
 testthat::test_that("test that the number of Low Reads is correct", {
   expect_true(sum(TechSigQC$LowReads) == sum(prData@data$Raw < 1000))
 })
 
 
-# req 2: test that the number of Low Percent Trimmed is correct:------
+# spec 2: test that the number of Low Percent Trimmed is correct:------
 testthat::test_that("test that the number of Low Percent Trimmed is correct", {
   expect_true(sum(TechSigQC$LowTrimmed) == sum(prData@data$`Trimmed (%)` < 80))
 })
 
 
-# req 3: test that the number of Low Percent Stiched is correct:------
+# spec 3: test that the number of Low Percent Stiched is correct:------
 testthat::test_that("test that the number of Low Percent Stiched is correct", {
   expect_true(sum(TechSigQC$LowStitched) == sum(prData@data$`Stitched (%)` < 80))
 })
 
 
-# req 4: test that the number of Low Percent Aligned is correct:------
+# spec 4: test that the number of Low Percent Aligned is correct:------
 testthat::test_that("test that the number of Low Percent Aligned is correct", {
   expect_true(sum(TechSigQC$LowAligned) == sum(prData@data$`Aligned (%)` < 80))
 })
 
 
-# req 5: test that the number of Low Percent Saturation is correct:------
+# spec 5: test that the number of Low Percent Saturation is correct:------
 testthat::test_that("test that the number of Low Percent Saturation is correct", {
   expect_true(sum(TechSigQC$LowSaturation) == sum(prData@data$`Saturated (%)` < 50))
 })
@@ -65,7 +64,7 @@ testData <- summarizeNegatives(testData)
 prData <- protocolData(testData)
 TechBgQC <- as.data.frame(prData[["QCFlags"]])
 
-# req 1: test that the number of Low Negatives is correct:------
+# spec 1: test that the number of Low Negatives is correct:------
 testthat::test_that("test that the number of Low Negatives is correct", {
     numberFail <- (pData(testData)[, "NegGeoMean_VnV_GeoMx_Hs_CTA_v1.2"] < 10) + 
                   (pData(testData)[, "NegGeoMean_Six-gene_test_v1_v1.1"] < 10)
@@ -73,7 +72,7 @@ testthat::test_that("test that the number of Low Negatives is correct", {
 })
 
 
-# req 2: test that the number of High NTC is correct:------
+# spec 2: test that the number of High NTC is correct:------
 testthat::test_that("test that the number of High NTC is correct", {
   expect_true(sum(TechBgQC$HighNTC) == sum(prData@data$NTC > 60))
 })
@@ -89,13 +88,13 @@ testData <- setGeoMxQCFlags(testData,
 prData <- protocolData(testData)
 segQC <- as.data.frame(prData[["QCFlags"]])
 
-# req 1: test that the number of Low Area is correct:------
+# spec 1: test that the number of Low Area is correct:------
 testthat::test_that("test that the number of Low Area is correct", {
   expect_true(sum(segQC$LowArea) == sum(sData(testData)[c("area")] < 20)) 
 })
 
 
-# req 2: test that the number of Low Nuclei is correct:------
+# spec 2: test that the number of Low Nuclei is correct:------
 testthat::test_that("test that the number of Low Nuclei is correct", {
   expect_true(sum(segQC$LowNuclei) == sum(testData@phenoData@data$nuclei < 16000))
 })
@@ -114,14 +113,14 @@ subTest <- subset(testData, subset=Module == gsub(".pkc", "", annotation(testDat
 neg_set <- negativeControlSubset(subTest)
 probeQCResults <- data.frame(fData(neg_set)[["QCFlags"]], check.names = FALSE)
 
-# req 1: test that the number of Low Probe Ratio is correct:------
+# spec 1: test that the number of Low Probe Ratio is correct:------
 testthat::test_that("test that the number of Low Probe Ratio is correct", {
   expect_true(sum(probeQC$LowProbeRatio) == sum(fData(testData)["ProbeRatio"] <= 0.1)) 
 })
 
 
 
-# req 2: test that the Local Grubbs Outlier is correct:
+# spec 2: test that the Local Grubbs Outlier is correct:
 neg_set <- assayDataElement(neg_set, elt="preLocalRemoval")
 neg_set <- neg_set[, !apply(neg_set, 2, function(x) {max(x) < 10L})]
 neg_set <- logtBase(neg_set, base=10L)
@@ -154,7 +153,7 @@ testthat::test_that("test that sample/target sets not flagged are correct", {
 })
 
 
-# req 3: test that the Global Grubbs Outlier is correct:
+# spec 4: test that the Global Grubbs Outlier is correct:
 globals_flagged <- rownames(probeQCResults)[which(probeQCResults$GlobalGrubbsOutlier==TRUE)]
 probe_flag_percent <- 100 * table(t(as.data.frame(test_outliers))) / dim(testData)[["Samples"]]
 global_outliers <- names(probe_flag_percent[probe_flag_percent >= 20])

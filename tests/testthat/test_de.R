@@ -22,6 +22,7 @@ mixedOuts <- mixedModelDE(target_demoData,
                             pAdjust = NULL
 )
 
+# spec 1: test that running in function is the same as manual running
 test_that("test output p-value is as expected", {
 # Randomly test one target manually
 testTargetExprs <- 
@@ -62,11 +63,11 @@ if (Sys.info()['sysname'] != "Windows") {
                                pAdjust = NULL
     )
 
-    # req 1: test that the outputs from mc and parallel methods is the same:------
+    # spec 2: test that the outputs from mc and parallel methods is the same:------
       expect_equal(mixedOutmc, mixedOutp)
 
 
-    # req 2: test that the outputs from mc and serial methods is the same:------
+    # spec 3: test that the outputs from mc and serial methods is the same:------
       expect_equal(mixedOutmc, mixedOuts)
     })
 
@@ -98,7 +99,7 @@ if (Sys.info()['sysname'] != "Windows") {
     })
 
 
-    # req 4: test that function outputs an error when model terms are not in sData:------
+    # spec 4: test that function outputs an error when model terms are not in sData:------
     # Run parallel
     test_that("test that error when model terms are not in sdata", {
       expect_error(
@@ -113,7 +114,7 @@ if (Sys.info()['sysname'] != "Windows") {
     })
 
 
-    # req 5: test that function outputs an error when groupVar is not in model formula:------
+    # spec 5: test that function outputs an error when groupVar is not in model formula:------
     # Run parallel
     test_that("test that error when group var not in model", {
       expect_error(
