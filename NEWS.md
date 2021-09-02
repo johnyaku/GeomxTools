@@ -44,6 +44,12 @@
 
 * Initial release, includes load with automatic aggregation to target-level
 
+## Citation:
+Ortogero, N.; Yang, Z.; Vitancol, R.; Griswold, M.; Henderson, D. 
+GeomxTools: NanoString GeoMx Tools. 
+R Package Version 1.0.0. 
+NanoString Technologies Inc.; Seattle, WA 98109, USA. 2021. 
+
 ## User notes:
 * This version was included in Bioconductor release 3.13
 
